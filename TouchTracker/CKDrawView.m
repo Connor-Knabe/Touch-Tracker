@@ -41,11 +41,53 @@
     
 }
 
--(void) drawRect:(CGRect)rect{
+-(void)drawRect:(CGRect)rect{
     [[UIColor blackColor]set];
-    for (CKLine *line in self.finishedLines) 
+    for (CKLine *line in self.finishedLines){
         [self strokeLine:line];
     }
+    if(self.currentLine){
+        //if line being drawn make it red
+        [[UIColor redColor] set];
+        [self strokeLine:self.currentLine];
+    }
+}
+
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    UITouch *t = [touches anyObject];
+    
+    CGPoint location = [t locationInView:self];
+    
+    
+    self.currentLine = [[CKLine alloc]init];
+    self.currentLine.begin = location;
+    self.currentLine.end = location;
+    
+    [self setNeedsDisplay];
+    
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    UITouch *t = [touches anyObject];
+    
+    CGPoint location = [t locationInView:self];
+    
+    
+    self.currentLine.end = location;
+    
+    [self setNeedsDisplay];
+    
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    [self.finishedLines addObject:self.currentLine];
+    
+    self.currentLine = nil;
+    
+    [self setNeedsDisplay];
 }
 
 
