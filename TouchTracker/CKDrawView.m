@@ -67,6 +67,11 @@
         CKLine *line = [[CKLine alloc]init];
         line.begin = location;
         line.end = location;
+        
+        NSValue *key = [NSValue valueWithNonretainedObject:t];
+        self.linesInProgress[key] = line;
+        
+        
     }
     
     
@@ -76,12 +81,16 @@
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    UITouch *t = [touches anyObject];
+
+    NSlog(@"%@", NSStringFromSelector(_cmd));
     
-    CGPoint location = [t locationInView:self];
-    
-    
-    self.currentLine.end = location;
+    for (UITouch *t in touches){
+        
+        NSValue *key = [NSValue valueWithNonretainedObject:t];
+        CKLine *line = self.linesInProgress[key];
+        line.end = [t locationInView:self];
+        
+    }
     
     [self setNeedsDisplay];
     
