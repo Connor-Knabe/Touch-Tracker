@@ -11,8 +11,10 @@
 
 @interface CKDrawView()
 
-@property (nonatomic, strong) CKLine *currentLine;
+//@property (nonatomic, strong) CKLine *currentLine;
+@property (nonatomic, strong) NSMutableDictionary *linesInProgress;
 @property (nonatomic, strong) NSMutableArray *finishedLines;
+
 
 @end
 
@@ -22,6 +24,7 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if(self) {
+        self.linesInProgress = [[NSMutableDictionary alloc]init];
         self.finishedLines = [[NSMutableArray alloc]init];
         self.backgroundColor = [UIColor grayColor];
         self.multipleTouchEnabled = YES;
@@ -56,15 +59,17 @@
 
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    
-    UITouch *t = [touches anyObject];
-    
-    CGPoint location = [t locationInView:self];
+    NSlog(@"%@", NSStringFromSelector(_cmd));
     
     
-    self.currentLine = [[CKLine alloc]init];
-    self.currentLine.begin = location;
-    self.currentLine.end = location;
+    for (UITouch *t in touches){
+        CGPoint location = [t locationInView:self];
+        CKLine *line = [[CKLine alloc]init];
+        line.begin = location;
+        line.end = location;
+    }
+    
+    
     
     [self setNeedsDisplay];
     
