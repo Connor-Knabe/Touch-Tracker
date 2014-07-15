@@ -24,6 +24,7 @@
     if(self) {
         self.finishedLines = [[NSMutableArray alloc]init];
         self.backgroundColor = [UIColor grayColor];
+        self.multipleTouchEnabled = YES;
     }
     return self;
 }
