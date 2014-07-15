@@ -50,16 +50,17 @@
     for (CKLine *line in self.finishedLines){
         [self strokeLine:line];
     }
-    if(self.currentLine){
-        //if line being drawn make it red
-        [[UIColor redColor] set];
-        [self strokeLine:self.currentLine];
+    [[UIColor redColor]set];
+    for (NSValue *key in self.linesInProgress){
+        [self strokeLine:self.linesInProgress[key]];
     }
+
+
 }
 
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSlog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"%@", NSStringFromSelector(_cmd));
     
     
     for (UITouch *t in touches){
@@ -82,7 +83,7 @@
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
 
-    NSlog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"%@", NSStringFromSelector(_cmd));
     
     for (UITouch *t in touches){
         
@@ -98,11 +99,23 @@
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     
-    [self.finishedLines addObject:self.currentLine];
+    NSLog(@"%@", NSStringFromSelector(_cmd));
     
-    self.currentLine = nil;
+    for (UITouch *t in touches){
+        
+        NSValue *key = [NSValue valueWithNonretainedObject:t];
+        CKLine *line = self.linesInProgress[key];
+        
+        [self.finishedLines addObject:line];
+        [self.linesInProgress removeObjectForKey:key];
+                        
+        
+    }
     
     [self setNeedsDisplay];
+
+
+
 }
 
 
